@@ -17,8 +17,8 @@ class GetStartedScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 200,
-              height: 200,
+              width: 250,
+              height: 250,
               child: Image.asset(
                 'assets/images/logo.png',
                 fit: BoxFit.contain,
@@ -27,15 +27,20 @@ class GetStartedScreen extends StatelessWidget {
             ElevatedButton(
               style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-
-                  )
-                ),
+                    RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                )),
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(18.0)),
               ),
-              onPressed: () {}, 
-              child: Text('Get Started')),
+              onPressed: () {},
+              child: Text(
+                'Get Started',
+                style: TextStyle(
+                  fontSize: 15,
+                )
+              ),
+            ),
           ],
         ),
       ),
