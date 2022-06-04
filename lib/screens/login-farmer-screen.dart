@@ -11,6 +11,8 @@ class LoginFarmerScreen extends StatefulWidget {
 
 class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
   late FocusNode myNode;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -32,6 +34,7 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
       width: double.infinity,
       height: double.infinity,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -104,15 +107,23 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                 // This optional block of code can be used to run
                 // code when the user saves the form.
               },
-              validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
-              },
             ),
           ),
           SizedBox(
-            height: 65,
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 30.0),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Text(
+                'Forgot Password?',
+                style: TextStyle(color: Colors.green),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 50,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 30.0),
@@ -124,9 +135,10 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                       RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   )),
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-                  padding:
-                      MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(18.0)),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green),
+                  padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.all(18.0)),
                 ),
                 onPressed: () {},
                 child: Text('Login',
@@ -135,6 +147,27 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                     )),
               ),
             ),
+          ),
+          SizedBox(
+            height: 40,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'New to Greenpath? ',
+                style: TextStyle(color: Colors.grey),
+              ),
+              Text(
+                'Register',
+                style:
+                    TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 15,
           ),
         ],
       ),
