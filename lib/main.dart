@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenpath_20/screens/forgot-password-screen.dart';
 import 'package:greenpath_20/screens/get-started-screen.dart';
 import 'package:greenpath_20/screens/login-farmer-screen.dart';
 import 'package:greenpath_20/screens/login-investor-screen.dart';
@@ -34,7 +35,7 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Greenpath v1.0',
-      home: LoginInvestorScreen()
+      home: ForgotPasswordScreen()
     );
   }
 }
