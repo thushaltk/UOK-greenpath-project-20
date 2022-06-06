@@ -2,30 +2,14 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 
-class LoginFarmerScreen extends StatefulWidget {
-  const LoginFarmerScreen({Key? key}) : super(key: key);
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginFarmerScreen> createState() => _LoginFarmerScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
-  late FocusNode myNode;
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    myNode = new FocusNode();
-  }
-
-  @override
-  void dispose() {
-    myNode.dispose();
-    super.dispose();
-  }
-
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,20 +38,35 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
               width: double.infinity,
               height: 200,
               child: Image.asset(
-                'assets/images/farmer.png',
+                'assets/images/resetpw.png',
                 fit: BoxFit.contain,
               ),
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 25.0, top: 10.0, bottom: 10.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  "Login",
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0, top: 10.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Reset",
+                      style:
+                          TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Password",
+                      style:
+                          TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 15,
@@ -75,20 +74,15 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 30.0),
               child: TextFormField(
-                focusNode: myNode,
+                obscureText: true,
                 decoration: InputDecoration(
-                  icon: Icon(Icons.alternate_email),
-                  hintText: 'Enter email address',
-                  labelText: 'Email *',
+                  icon: Icon(Icons.lock),
+                  hintText: 'Enter new password',
+                  labelText: 'New Password *',
                 ),
                 onSaved: (String? value) {
                   // This optional block of code can be used to run
                   // code when the user saves the form.
-                },
-                validator: (String? value) {
-                  return (value != null && value.contains('@'))
-                      ? 'Do not use the @ char.'
-                      : null;
                 },
               ),
             ),
@@ -101,26 +95,13 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                 obscureText: true,
                 decoration: InputDecoration(
                   icon: Icon(Icons.lock),
-                  hintText: 'Enter password',
-                  labelText: 'Password *',
+                  hintText: 'Enter password again',
+                  labelText: 'Confirm New Password *',
                 ),
                 onSaved: (String? value) {
                   // This optional block of code can be used to run
                   // code when the user saves the form.
                 },
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 30.0),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Text(
-                  'Forgot Password?',
-                  style: TextStyle(color: Colors.green),
-                ),
               ),
             ),
             SizedBox(
@@ -142,7 +123,7 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                         EdgeInsets.all(18.0)),
                   ),
                   onPressed: () {},
-                  child: Text('Login',
+                  child: Text('Reset',
                       style: TextStyle(
                         fontSize: 15,
                       )),
@@ -151,24 +132,6 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
             ),
             SizedBox(
               height: 40,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'New to Greenpath? ',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                Text(
-                  'Register',
-                  style: TextStyle(
-                      color: Colors.green, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 15,
             ),
           ],
         ),
