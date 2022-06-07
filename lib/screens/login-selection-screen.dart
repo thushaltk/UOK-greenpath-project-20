@@ -1,8 +1,12 @@
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:greenpath_20/screens/login-farmer-screen.dart';
+import 'package:greenpath_20/screens/register-farmer-screen.dart';
 
 class LoginSelectionScreen extends StatelessWidget {
+  static const routeName = '/login-selection';
+
   const LoginSelectionScreen({Key? key}) : super(key: key);
 
   @override
@@ -16,12 +20,17 @@ class LoginSelectionScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: 250,
-            height: 250,
-            child: Image.asset(
-              'assets/images/logo.png',
-              fit: BoxFit.contain,
+          GestureDetector(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child: Container(
+              width: 250,
+              height: 250,
+              child: Image.asset(
+                'assets/images/logo.png',
+                fit: BoxFit.contain,
+              ),
             ),
           ),
           SizedBox(
@@ -69,7 +78,9 @@ class LoginSelectionScreen extends StatelessWidget {
                           padding: MaterialStateProperty.all<EdgeInsets>(
                               EdgeInsets.all(18.0)),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(LoginFarmerScreen.routeName);
+                        },
                         child: Text('Login',
                             style: TextStyle(
                               fontSize: 15,
@@ -95,7 +106,9 @@ class LoginSelectionScreen extends StatelessWidget {
                           padding: MaterialStateProperty.all<EdgeInsets>(
                               EdgeInsets.all(18.0)),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(RegisterFarmerScreen.routeName);
+                        },
                         child: Text('Register',
                             style: TextStyle(
                               fontSize: 15,

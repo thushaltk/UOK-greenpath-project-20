@@ -1,6 +1,7 @@
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:greenpath_20/screens/login-selection-screen.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({Key? key}) : super(key: key);
@@ -33,7 +34,9 @@ class GetStartedScreen extends StatelessWidget {
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
                 padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(18.0)),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(LoginSelectionScreen.routeName);
+              },
               child: Text(
                 'Get Started',
                 style: TextStyle(

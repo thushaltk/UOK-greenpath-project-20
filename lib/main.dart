@@ -38,7 +38,13 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Greenpath v1.0',
-      home: RegisterFarmerScreen()
+      home: GetStartedScreen(),
+      routes: {
+        LoginSelectionScreen.routeName: (ctx) => const LoginSelectionScreen(),
+        LoginFarmerScreen.routeName: (ctx) => const LoginFarmerScreen(),
+        RegisterFarmerScreen.routeName: (ctx) => const RegisterFarmerScreen(),
+        ForgotPasswordScreen.routeName: (ctx) => const ForgotPasswordScreen()
+      },
     );
   }
 }
