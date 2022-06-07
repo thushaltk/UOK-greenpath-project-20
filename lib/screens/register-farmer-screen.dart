@@ -89,7 +89,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
               padding: const EdgeInsets.only(left: 20.0, right: 30.0),
               child: TextFormField(
                 decoration: InputDecoration(
-                  icon: Icon(Icons.person),
+                  icon: Icon(Icons.face),
                   hintText: 'Enter full name',
                   labelText: 'Full Name *',
                 ),
@@ -142,7 +142,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.person),
+                  Icon(Icons.male, color: Colors.grey),
                   SizedBox(
                     width: 15,
                   ),
@@ -151,7 +151,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                     child: DropdownButton<String>(
                       isExpanded: true,
                       value: dropdownValue,
-                      icon: Icon(Icons.arrow_downward),
+                      icon: Icon(Icons.arrow_downward, color: Colors.grey),
                       elevation: 16,
                       onChanged: (String? newValue) {
                         setState(() {
@@ -162,7 +162,9 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value),
+                          child: Text(value, style: TextStyle(
+                            color: Colors.grey
+                          ),),
                         );
                       }).toList(),
                     ),
@@ -195,7 +197,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.map),
+                  Icon(Icons.map, color: Colors.grey),
                   SizedBox(
                     width: 15,
                   ),
@@ -204,7 +206,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                     child: DropdownButton<String>(
                       isExpanded: true,
                       value: dropdownDistrictValue,
-                      icon: Icon(Icons.arrow_downward),
+                      icon: Icon(Icons.arrow_downward, color: Colors.grey),
                       elevation: 16,
                       onChanged: (String? newValue) {
                         setState(() {
@@ -214,7 +216,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                       items: districts.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value),
+                          child: Text(value, style: TextStyle(color: Colors.grey),),
                         );
                       }).toList(),
                     ),
@@ -230,7 +232,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.food_bank),
+                  Icon(Icons.eco, color: Colors.grey),
                   SizedBox(
                     width: 15,
                   ),
@@ -239,7 +241,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                     child: DropdownButton<String>(
                       isExpanded: true,
                       value: dropdownCultivationsValue,
-                      icon: Icon(Icons.arrow_downward),
+                      icon: Icon(Icons.arrow_downward, color: Colors.grey),
                       elevation: 16,
                       onChanged: (String? newValue) {
                         setState(() {
@@ -249,7 +251,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                       items: cultivations.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value),
+                          child: Text(value, style: TextStyle(color:Colors.grey)),
                         );
                       }).toList(),
                     ),
@@ -278,7 +280,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                         style: TextStyle(fontSize: 15, color: Colors.grey),
                       ),
                       TextSpan(
-                        text: 'privacy policy',
+                        text: 'Privacy Policy',
                         style: TextStyle(fontSize: 15, color: Colors.green),
                       )
                     ]
