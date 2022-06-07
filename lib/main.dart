@@ -5,6 +5,7 @@ import 'package:greenpath_20/screens/get-started-screen.dart';
 import 'package:greenpath_20/screens/login-farmer-screen.dart';
 import 'package:greenpath_20/screens/login-investor-screen.dart';
 import 'package:greenpath_20/screens/login-selection-screen.dart';
+import 'package:greenpath_20/screens/register-farmer-screen.dart';
 import 'package:greenpath_20/screens/reset-password-screen.dart';
 
 void main() {
@@ -37,7 +38,7 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Greenpath v1.0',
-      home: ResetPasswordScreen()
+      home: RegisterFarmerScreen()
     );
   }
 }
