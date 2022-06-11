@@ -105,8 +105,34 @@ class _RegisterInvestorTwoScreenState extends State<RegisterInvestorTwoScreen> {
                     );
                   }).toList(),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0, bottom: 10.0, right: 30.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        text: "By signing up, you’re agree to our ",
+                        style: TextStyle(fontSize: 15, color: Colors.grey),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Terms and Conditions ',
+                            style: TextStyle(fontSize: 15, color: Colors.green),
+                          ),
+                          TextSpan(
+                            text: 'and ',
+                            style: TextStyle(fontSize: 15, color: Colors.grey),
+                          ),
+                          TextSpan(
+                            text: 'Privacy Policy',
+                            style: TextStyle(fontSize: 15, color: Colors.green),
+                          )
+                        ]
+                      ),
+                    ),
+                  ),
+                ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 30.0),
@@ -133,7 +159,7 @@ class _RegisterInvestorTwoScreenState extends State<RegisterInvestorTwoScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
