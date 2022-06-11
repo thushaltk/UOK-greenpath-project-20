@@ -6,6 +6,8 @@ import 'package:greenpath_20/screens/login-farmer-screen.dart';
 import 'package:greenpath_20/screens/login-investor-screen.dart';
 import 'package:greenpath_20/screens/login-selection-screen.dart';
 import 'package:greenpath_20/screens/register-farmer-screen.dart';
+import 'package:greenpath_20/screens/register-investor-one-screen.dart';
+import 'package:greenpath_20/screens/register-investor-two-screen.dart';
 import 'package:greenpath_20/screens/reset-password-screen.dart';
 
 void main() {
@@ -42,8 +44,11 @@ class _MyAppState extends State<MyApp> {
       routes: {
         LoginSelectionScreen.routeName: (ctx) => const LoginSelectionScreen(),
         LoginFarmerScreen.routeName: (ctx) => const LoginFarmerScreen(),
+        LoginInvestorScreen.routeName: (ctx) => const LoginInvestorScreen(),
         RegisterFarmerScreen.routeName: (ctx) => const RegisterFarmerScreen(),
-        ForgotPasswordScreen.routeName: (ctx) => const ForgotPasswordScreen()
+        ForgotPasswordScreen.routeName: (ctx) => const ForgotPasswordScreen(),
+        RegisterInvestorOneScreen.routeName: (ctx) => const RegisterInvestorOneScreen(),
+        RegisterInvestorTwoScreen.routeName: (ctx) => const RegisterInvestorTwoScreen()
       },
     );
   }

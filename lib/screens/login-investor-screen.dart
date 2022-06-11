@@ -3,6 +3,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 
 class LoginInvestorScreen extends StatefulWidget {
+  static const routeName = '/login-investor';
+
   const LoginInvestorScreen({Key? key}) : super(key: key);
 
   @override
