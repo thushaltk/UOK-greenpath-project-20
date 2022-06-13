@@ -59,6 +59,8 @@ flutter:
     - assets/images/tomatoe.png
     - assets/images/cabbage.png
     - assets/images/profile.png
+    - assets/images/cloudy.png
+    - assets/images/business.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

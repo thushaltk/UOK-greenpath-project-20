@@ -3,6 +3,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:greenpath_20/widgets/item-card-widget.dart';
 import 'package:greenpath_20/widgets/navigation-drawer-widget.dart';
+import 'package:greenpath_20/widgets/nearby-business-card-widget.dart';
+import 'package:greenpath_20/widgets/weather-card-widget.dart';
 
 class DashboardFarmerScreen extends StatefulWidget {
   static const routeName = '/dashboard-farmer';
@@ -85,101 +87,170 @@ class _DashboardFarmerScreenState extends State<DashboardFarmerScreen> {
         ),
       ),
       drawer: NavigationDrawyerWidget(),
-      body: Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        height: double.infinity,
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Dashboard",
-                      style:
-                          TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 180,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 25.0, bottom: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: ItemCardWidget(
-                              routename: 'paddy-item',
-                              image: Image.asset(
-                                'assets/images/paddy.png',
-                                fit: BoxFit.cover,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 15,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "Dashboard",
+                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              height: double.infinity,
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 180,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: <Widget>[
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 25.0, bottom: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: ItemCardWidget(
+                                    routename: 'paddy-item',
+                                    image: Image.asset(
+                                      'assets/images/paddy.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                    name: 'Paddy'),
                               ),
-                              name: 'Paddy'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: ItemCardWidget(
+                                    routename: 'tomatoe-item',
+                                    image: Image.asset(
+                                      'assets/images/tomatoe.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                    name: 'Tomatoe'),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: ItemCardWidget(
+                                    routename: 'cabbage-item',
+                                    image: Image.asset(
+                                      'assets/images/cabbage.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                    name: 'Cabbage'),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: SizedBox(
+                                  width: 150,
+                                  height: 150,
+                                  child: Card(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(25.0),
+                                          side: BorderSide(color: Colors.green)),
+                                      elevation: 5,
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Colors.green,
+                                      )),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
+                        padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: ItemCardWidget(
-                              routename: 'tomatoe-item',
-                              image: Image.asset(
-                                'assets/images/tomatoe.png',
-                                fit: BoxFit.cover,
-                              ),
-                              name: 'Tomatoe'),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: ItemCardWidget(
-                              routename: 'cabbage-item',
-                              image: Image.asset(
-                                'assets/images/cabbage.png',
-                                fit: BoxFit.cover,
-                              ),
-                              name: 'Cabbage'),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: SizedBox(
-                            width: 150,
-                            height: 150,
-                            child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    side: BorderSide(color: Colors.green)),
-                                elevation: 5,
-                                child: Icon(
-                                  Icons.add,
-                                  color: Colors.green,
-                                )),
+                          child: Text(
+                            "Weather Forecast",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: Align(
+                            alignment: Alignment.topLeft,
+                            child: WeatherCardWidget()),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Nearby Businesses",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: ListView(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: NearbyBusinessCardWidget(),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: NearbyBusinessCardWidget(),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: NearbyBusinessCardWidget(),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
