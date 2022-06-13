@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenpath_20/screens/cultivation-screen.dart';
 import 'package:greenpath_20/screens/dashboard-farmer-screen.dart';
 import 'package:greenpath_20/screens/enter-verification-screen.dart';
 import 'package:greenpath_20/screens/forgot-password-screen.dart';
@@ -41,7 +42,7 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Greenpath v1.0',
-      home: DashboardFarmerScreen(),
+      home: GetStartedScreen(),
       routes: {
         LoginSelectionScreen.routeName: (ctx) => const LoginSelectionScreen(),
         LoginFarmerScreen.routeName: (ctx) => const LoginFarmerScreen(),
@@ -49,7 +50,9 @@ class _MyAppState extends State<MyApp> {
         RegisterFarmerScreen.routeName: (ctx) => const RegisterFarmerScreen(),
         ForgotPasswordScreen.routeName: (ctx) => const ForgotPasswordScreen(),
         RegisterInvestorOneScreen.routeName: (ctx) => const RegisterInvestorOneScreen(),
-        RegisterInvestorTwoScreen.routeName: (ctx) => const RegisterInvestorTwoScreen()
+        RegisterInvestorTwoScreen.routeName: (ctx) => const RegisterInvestorTwoScreen(),
+        DashboardFarmerScreen.routeName: (ctx) => const DashboardFarmerScreen(),
+        CultivationScreen.routeName: (ctx) => const CultivationScreen()
       },
     );
   }

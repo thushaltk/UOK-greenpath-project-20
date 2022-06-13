@@ -1,22 +1,23 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/material.dart';
-import 'package:greenpath_20/screens/cultivation-screen.dart';
-import 'package:greenpath_20/widgets/item-card-widget.dart';
+import 'package:greenpath_20/widgets/condition-card-widget.dart';
 import 'package:greenpath_20/widgets/navigation-drawer-widget.dart';
-import 'package:greenpath_20/widgets/nearby-business-card-widget.dart';
-import 'package:greenpath_20/widgets/weather-card-widget.dart';
 
-class DashboardFarmerScreen extends StatefulWidget {
-  static const routeName = '/dashboard-farmer';
+import '../widgets/nearby-business-card-widget.dart';
 
-  const DashboardFarmerScreen({Key? key}) : super(key: key);
+class CultivationScreen extends StatefulWidget {
+  static const routeName = '/cultivation-screen';
+  //final Image image;
+  //final String name;
+
+  const CultivationScreen({Key? key}) : super(key: key);
 
   @override
-  State<DashboardFarmerScreen> createState() => _DashboardFarmerScreenState();
+  State<CultivationScreen> createState() => _CultivationScreenState();
 }
 
-class _DashboardFarmerScreenState extends State<DashboardFarmerScreen> {
+class _CultivationScreenState extends State<CultivationScreen> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -95,14 +96,44 @@ class _DashboardFarmerScreenState extends State<DashboardFarmerScreen> {
           SizedBox(
             height: 15,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Dashboard",
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              ),
+          Container(
+            width: double.infinity,
+            height: 200,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: <Widget>[
+                Container(
+                  width: double.infinity,
+                  height: 180,
+                  child: Image.asset(
+                    'assets/images/paddy-big.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Stack(alignment: Alignment.centerLeft, children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                      ),
+                      color: Colors.black54,
+                    ),
+                    width: double.infinity,
+                    height: 80,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 18.0),
+                    child: Text(
+                      'Paddy',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 38.0),
+                    ),
+                  )
+                ]),
+              ],
             ),
           ),
           Expanded(
@@ -116,80 +147,8 @@ class _DashboardFarmerScreenState extends State<DashboardFarmerScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        height: 180,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 25.0, bottom: 10.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .pushNamed(CultivationScreen.routeName);
-                                  },
-                                  child: ItemCardWidget(
-                                      routename: 'paddy-item',
-                                      image: Image.asset(
-                                        'assets/images/paddy.png',
-                                        fit: BoxFit.cover,
-                                      ),
-                                      name: 'Paddy'),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: ItemCardWidget(
-                                    routename: 'tomatoe-item',
-                                    image: Image.asset(
-                                      'assets/images/tomatoe.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                    name: 'Tomatoe'),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: ItemCardWidget(
-                                    routename: 'cabbage-item',
-                                    image: Image.asset(
-                                      'assets/images/cabbage.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                    name: 'Cabbage'),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: SizedBox(
-                                  width: 150,
-                                  height: 150,
-                                  child: Card(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(25.0),
-                                          side:
-                                              BorderSide(color: Colors.green)),
-                                      elevation: 5,
-                                      child: Icon(
-                                        Icons.add,
-                                        color: Colors.green,
-                                      )),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      SizedBox(
+                        height: 15,
                       ),
                       Padding(
                         padding:
@@ -197,17 +156,35 @@ class _DashboardFarmerScreenState extends State<DashboardFarmerScreen> {
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "Weather Forecast",
+                            "Conditions",
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Align(
-                            alignment: Alignment.topLeft,
-                            child: WeatherCardWidget()),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: ConditionCardWidget()),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: ConditionCardWidget()),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: ConditionCardWidget()),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 10,
@@ -218,7 +195,7 @@ class _DashboardFarmerScreenState extends State<DashboardFarmerScreen> {
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "Nearby Businesses",
+                            "Interested Businesses",
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),

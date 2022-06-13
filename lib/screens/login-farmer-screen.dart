@@ -1,6 +1,7 @@
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:greenpath_20/screens/dashboard-farmer-screen.dart';
 import 'package:greenpath_20/screens/forgot-password-screen.dart';
 import 'package:greenpath_20/screens/register-farmer-screen.dart';
 
@@ -154,7 +155,9 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                         padding: MaterialStateProperty.all<EdgeInsets>(
                             EdgeInsets.all(18.0)),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(DashboardFarmerScreen.routeName);
+                      },
                       child: Text('Login',
                           style: TextStyle(
                             fontSize: 15,
