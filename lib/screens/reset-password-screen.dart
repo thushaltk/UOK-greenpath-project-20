@@ -1,8 +1,11 @@
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:greenpath_20/screens/login-farmer-screen.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
+  static const routeName = '/reset-password';
+
   const ResetPasswordScreen({Key? key}) : super(key: key);
 
   @override
@@ -72,38 +75,24 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               height: 15,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 30.0),
-              child: TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.lock),
-                  hintText: 'Enter new password',
-                  labelText: 'New Password *',
+                  padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.done_outline_outlined, color: Colors.green, size: 50,),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Password reset link has been sent to the email.",
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                onSaved: (String? value) {
-                  // This optional block of code can be used to run
-                  // code when the user saves the form.
-                },
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 30.0),
-              child: TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.lock),
-                  hintText: 'Enter password again',
-                  labelText: 'Confirm New Password *',
-                ),
-                onSaved: (String? value) {
-                  // This optional block of code can be used to run
-                  // code when the user saves the form.
-                },
-              ),
-            ),
             SizedBox(
               height: 50,
             ),
@@ -122,8 +111,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     padding: MaterialStateProperty.all<EdgeInsets>(
                         EdgeInsets.all(18.0)),
                   ),
-                  onPressed: () {},
-                  child: Text('Reset',
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(LoginFarmerScreen.routeName);
+                  },
+                  child: Text('Go to Login',
                       style: TextStyle(
                         fontSize: 15,
                       )),

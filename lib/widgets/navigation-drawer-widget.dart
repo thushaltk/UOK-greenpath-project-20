@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenpath_20/screens/login-selection-screen.dart';
 
 class NavigationDrawyerWidget extends StatelessWidget {
   const NavigationDrawyerWidget({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class NavigationDrawyerWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               SizedBox(
-                  height: 230,
+                  height: 160,
                   width: double.infinity,
                   child: DecoratedBox(
                     decoration: const BoxDecoration(
@@ -22,8 +23,8 @@ class NavigationDrawyerWidget extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(18.0, 0, 0, 0),
                       child: Container(
-                        width: 250,
-                        height: 250,
+                        width: 150,
+                        height: 150,
                         child: Image.asset(
                           'assets/images/logo.png',
                           fit: BoxFit.contain,
@@ -55,10 +56,10 @@ class NavigationDrawyerWidget extends StatelessWidget {
                       },
                     ),
                     buildMenuItem(
-                        text: 'Admin',
-                        icon: Icons.admin_panel_settings,
+                        text: 'Logout',
+                        icon: Icons.logout,
                         tapHandler: () {
-                          //Navigator.of(context).pushNamed(AdminLoginScreen.routeName);
+                          Navigator.of(context).pushNamed(LoginSelectionScreen.routeName);
                         }),
                   ],
                 ),

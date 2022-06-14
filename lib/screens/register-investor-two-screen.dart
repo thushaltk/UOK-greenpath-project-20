@@ -1,7 +1,10 @@
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:greenpath_20/screens/create-investor-account-screen.dart';
 import 'package:greenpath_20/screens/login-investor-screen.dart';
+import 'package:greenpath_20/services/auth-service.dart';
+import 'package:provider/provider.dart';
 
 class RegisterInvestorTwoScreen extends StatefulWidget {
   static const routeName = '/register-investor-two';
@@ -25,9 +28,20 @@ class _RegisterInvestorTwoScreenState extends State<RegisterInvestorTwoScreen> {
     'Green pepper Cultivation': false,
     'Potatoe Cultivation': false
   };
+  String id = "";
+  List<String> selectedCultivations = [];
+
+  Future<void> onSubmit() async {
+    await Provider.of<AuthService>(context, listen: false).insertCultivationsInvestor(id, selectedCultivations);
+    Navigator.of(context).pushNamed(CreateInvestorAccountScreen.routeName);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, String>{}) as Map;
+    setState(() {
+      id = arguments['responsedata'];
+    });
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
@@ -99,7 +113,7 @@ class _RegisterInvestorTwoScreenState extends State<RegisterInvestorTwoScreen> {
                           values[key] = value!;
                         });
                         if (value == true) {
-                          print(key);
+                          selectedCultivations.add(key);
                         }
                       },
                     );
@@ -150,7 +164,9 @@ class _RegisterInvestorTwoScreenState extends State<RegisterInvestorTwoScreen> {
                         padding: MaterialStateProperty.all<EdgeInsets>(
                             EdgeInsets.all(18.0)),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        onSubmit();
+                      },
                       child: Text('Continue',
                           style: TextStyle(
                             fontSize: 15,

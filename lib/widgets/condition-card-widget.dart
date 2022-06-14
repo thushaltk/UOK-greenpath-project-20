@@ -3,10 +3,11 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 
 class ConditionCardWidget extends StatefulWidget {
-  // final String value;
-  // final String name;
+  final IconData icon;
+  final String name;
+  final String value;
 
-  const ConditionCardWidget({Key? key})
+  const ConditionCardWidget({Key? key, required this.icon, required this.name, required this.value})
       : super(key: key);
 
   @override
@@ -30,19 +31,19 @@ class _ConditionCardWidgetState extends State<ConditionCardWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.thermostat,
+                    widget.icon,
                     color: Colors.blue,
                     size: 42,
                   ),
                   Text(
-                    'Soil Temperature',
+                    widget.name,
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    '25 C',
+                    widget.value,
                     style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
                   )
                 ],

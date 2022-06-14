@@ -5,72 +5,52 @@ import 'package:greenpath_20/services/farmer-service.dart';
 import 'package:greenpath_20/services/investor-service.dart';
 import 'package:greenpath_20/widgets/condition-card-widget.dart';
 import 'package:greenpath_20/widgets/navigation-drawer-widget.dart';
+import 'package:greenpath_20/widgets/nearby-farmer-card-widget.dart';
 
 import '../widgets/nearby-business-card-widget.dart';
 
-class CultivationScreen extends StatefulWidget {
-  static const routeName = '/cultivation-screen';
+class DashboardInvestorScreen extends StatefulWidget {
+  static const routeName = '/dashboard-investor-screen';
   final userEmail;
   //final Image image;
   //final String name;
 
-  const CultivationScreen({Key? key, this.userEmail}) : super(key: key);
+  const DashboardInvestorScreen({Key? key, this.userEmail}) : super(key: key);
 
   @override
-  State<CultivationScreen> createState() => _CultivationScreenState();
+  State<DashboardInvestorScreen> createState() =>
+      _DashboardInvestorScreenState();
 }
 
-class _CultivationScreenState extends State<CultivationScreen> {
+class _DashboardInvestorScreenState extends State<DashboardInvestorScreen> {
   int _selectedIndex = 0;
-  late FarmerService farmerService;
   late InvestorService investorService;
-  List investorData = [];
-  String cultivationName = "";
+  late FarmerService farmerService;
+  List farmerData = [];
   String username = "";
-  String district = "";
+  String businessname = "";
+  String location = "";
   List cultivations = [];
-  String soilMoisture = "";
-  String soilTemperature = "";
-  String soilPhLevel = "";
 
   initialise() async {
-    farmerService = FarmerService();
     investorService = InvestorService();
-    farmerService.initialise();
+    farmerService = FarmerService();
     investorService.initialise();
+    farmerService.initialise();
 
-    await farmerService.getDataByEmail(widget.userEmail).then((value) => {
-          for (var ele in value['cultivations'])
-            {
-              if (ele['name'] == cultivationName)
-                {
-                  setState((() {
-                    soilTemperature = ele['soilTemperature'];
-                    soilMoisture = ele['soilMoisture'];
-                    soilPhLevel = ele['soilPhLevel'];
-                  }))
-                }
-            },
+    await investorService.getDataByEmail(widget.userEmail).then((value) => {
           setState(() {
             username = value['username'];
             cultivations = value['cultivations'];
-            district = value['district'];
+            businessname = value['businessname'];
+            location = value['location'];
           })
         });
 
-    await investorService.getDataByLocation(district).then((value) => {
-          for (var ele in value)
-            {
-              for (var cult in ele['cultivations'])
-                {
-                  if (cult == (cultivationName + " Cultivation"))
-                    {
-                      setState(() {
-                        investorData.add(ele);
-                      })
-                    }
-                }
-            }
+    await farmerService.getDataByDistrict(location).then((value) => {
+          setState(() {
+            farmerData = value;
+          })
         });
   }
 
@@ -90,9 +70,6 @@ class _CultivationScreenState extends State<CultivationScreen> {
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, String>{}) as Map;
-    setState(() {
-      cultivationName = arguments['name'];
-    });
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -155,8 +132,8 @@ class _CultivationScreenState extends State<CultivationScreen> {
       ),
       drawer: NavigationDrawyerWidget(),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             height: 15,
@@ -168,28 +145,12 @@ class _CultivationScreenState extends State<CultivationScreen> {
               alignment: Alignment.bottomCenter,
               children: <Widget>[
                 Container(
-                  width: double.infinity,
-                  height: 180,
-                  child: arguments['name'] == "Paddy"
-                      ? Image.asset(
-                          'assets/images/paddy-big.png',
-                          fit: BoxFit.cover,
-                        )
-                      : arguments['name'] == "Cabbage"
-                          ? Image.asset(
-                              'assets/images/cabbage-big.png',
-                              fit: BoxFit.cover,
-                            )
-                          : arguments['name'] == "Tomatoe"
-                              ? Image.asset(
-                                  'assets/images/tomatoe-big.png',
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
-                                  'assets/images/paddy-big.png',
-                                  fit: BoxFit.cover,
-                                ),
-                ),
+                    width: double.infinity,
+                    height: 180,
+                    child: Image.asset(
+                      'assets/images/shop.png',
+                      fit: BoxFit.cover,
+                    )),
                 Stack(alignment: Alignment.centerLeft, children: <Widget>[
                   Container(
                     decoration: BoxDecoration(
@@ -205,11 +166,11 @@ class _CultivationScreenState extends State<CultivationScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 18.0),
                     child: Text(
-                      arguments['name'],
+                      businessname,
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 38.0),
+                          fontSize: 23.0),
                     ),
                   )
                 ]),
@@ -229,64 +190,57 @@ class _CultivationScreenState extends State<CultivationScreen> {
                       height: 15,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
+                      padding:
+                          const EdgeInsets.only(left: 25.0, bottom: 10.0),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "Conditions",
+                          "Interested Cultivations",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
-                    Row(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: ConditionCardWidget(
-                              icon: Icons.thermostat,
-                              name: 'Soil Temperature',
-                              value: soilTemperature,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: ConditionCardWidget(
-                              icon: Icons.water_drop,
-                              name: 'Soil Moisture',
-                              value: soilMoisture,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: ConditionCardWidget(
-                              icon: Icons.filter_alt_rounded,
-                              name: 'Soil Ph Level',
-                              value: soilPhLevel,
-                            ),
-                          ),
-                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: cultivations.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 25.0),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.eco,
+                                    color: Colors.green,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    cultivations[index],
+                                    style: TextStyle(color: Colors.green),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        )
                       ],
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
+                      padding:
+                          const EdgeInsets.only(left: 25.0, bottom: 10.0),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "Interested Businesses",
+                          "Nearby Farmers",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
@@ -294,16 +248,16 @@ class _CultivationScreenState extends State<CultivationScreen> {
                     ),
                     ListView.builder(
                         shrinkWrap: true,
-                        itemCount: investorData.length,
+                        itemCount: farmerData.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 10.0),
                             child: Align(
                               alignment: Alignment.topLeft,
-                              child: NearbyBusinessCardWidget(
-                                  businessname: investorData[index]
-                                      ['businessname'],
-                                  location: investorData[index]['location']),
+                              child: NearbyFarmerCardWidget(
+                                  farmerfullname: farmerData[index]
+                                      ['fullname'],
+                                  district: farmerData[index]['district']),
                             ),
                           );
                         }),

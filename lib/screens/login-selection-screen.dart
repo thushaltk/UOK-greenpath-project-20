@@ -2,6 +2,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:greenpath_20/screens/login-farmer-screen.dart';
+import 'package:greenpath_20/screens/login-investor-screen.dart';
 import 'package:greenpath_20/screens/register-farmer-screen.dart';
 import 'package:greenpath_20/screens/register-investor-one-screen.dart';
 
@@ -158,7 +159,9 @@ class LoginSelectionScreen extends StatelessWidget {
                           padding: MaterialStateProperty.all<EdgeInsets>(
                               EdgeInsets.all(18.0)),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(LoginInvestorScreen.routeName);
+                        },
                         child: Text('Login',
                             style: TextStyle(
                               fontSize: 15,

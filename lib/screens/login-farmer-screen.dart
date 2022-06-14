@@ -1,9 +1,13 @@
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:greenpath_20/models/http_exception.dart';
 import 'package:greenpath_20/screens/dashboard-farmer-screen.dart';
 import 'package:greenpath_20/screens/forgot-password-screen.dart';
 import 'package:greenpath_20/screens/register-farmer-screen.dart';
+import 'package:greenpath_20/services/auth-service.dart';
+import 'package:provider/provider.dart';
 
 class LoginFarmerScreen extends StatefulWidget {
   static const routeName = '/login-farmer';
@@ -16,8 +20,9 @@ class LoginFarmerScreen extends StatefulWidget {
 
 class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
   late FocusNode myNode;
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -29,6 +34,53 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
   void dispose() {
     myNode.dispose();
     super.dispose();
+  }
+
+  Future<void> onSubmit() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await Provider.of<AuthService>(context, listen: false)
+          .login(_emailController.text, _passwordController.text);
+      Navigator.of(context).pushNamed(DashboardFarmerScreen.routeName);
+    } on HttpException catch (error) {
+      var errorMessage = "Authentication Failed!";
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email is already in use!';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'This email is invalid!';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'Weak password!';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'Email not found!';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Password is incorrect!';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (error) {
+      var errorMessage = "Could not authenticate you. Please try again later.";
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -68,13 +120,14 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                   ),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 25.0, top: 10.0, bottom: 10.0),
+                  padding: const EdgeInsets.only(
+                      left: 25.0, top: 10.0, bottom: 10.0),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
                       "Login",
-                      style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -84,6 +137,7 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 30.0),
                   child: TextFormField(
+                    controller: _emailController,
                     focusNode: myNode,
                     decoration: InputDecoration(
                       icon: Icon(Icons.alternate_email),
@@ -107,6 +161,7 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 30.0),
                   child: TextFormField(
+                    controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
@@ -127,8 +182,9 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                   child: Align(
                     alignment: Alignment.topRight,
                     child: GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).pushNamed(ForgotPasswordScreen.routeName);
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(ForgotPasswordScreen.routeName);
                       },
                       child: Text(
                         'Forgot Password?',
@@ -140,31 +196,42 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                 SizedBox(
                   height: 50,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0, right: 30.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        )),
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.green),
-                        padding: MaterialStateProperty.all<EdgeInsets>(
-                            EdgeInsets.all(18.0)),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(DashboardFarmerScreen.routeName);
-                      },
-                      child: Text('Login',
-                          style: TextStyle(
-                            fontSize: 15,
+                if (_isLoading)
+                  Column(
+                    children: [
+                      ConstrainedBox(
+                          constraints: const BoxConstraints.tightFor(
+                              width: 35, height: 35),
+                          child: const CircularProgressIndicator()),
+                    ],
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0, right: 30.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
                           )),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.green),
+                          padding: MaterialStateProperty.all<EdgeInsets>(
+                              EdgeInsets.all(18.0)),
+                        ),
+                        onPressed: () {
+                          onSubmit();
+                        },
+                        child: Text('Login',
+                            style: TextStyle(
+                              fontSize: 15,
+                            )),
+                      ),
                     ),
                   ),
-                ),
                 SizedBox(
                   height: 40,
                 ),
@@ -177,8 +244,9 @@ class _LoginFarmerScreenState extends State<LoginFarmerScreen> {
                       style: TextStyle(color: Colors.grey),
                     ),
                     GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).pushNamed(RegisterFarmerScreen.routeName);
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(RegisterFarmerScreen.routeName);
                       },
                       child: Text(
                         'Register',

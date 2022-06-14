@@ -3,32 +3,49 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:greenpath_20/screens/reset-password-screen.dart';
 import 'package:greenpath_20/services/auth-service.dart';
+import 'package:greenpath_20/services/farmer-service.dart';
 import 'package:provider/provider.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
-  static const routeName = '/forgot-password';
+class AddCultivationScreen extends StatefulWidget {
+  static const routeName = '/add-cultivation';
 
-  const ForgotPasswordScreen({Key? key}) : super(key: key);
+  const AddCultivationScreen({Key? key}) : super(key: key);
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  State<AddCultivationScreen> createState() => _AddCultivationScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final _emailController = TextEditingController();
+class _AddCultivationScreenState extends State<AddCultivationScreen> {
+  final _nameController = TextEditingController();
+  late FarmerService farmerService;
+  String id = "";
 
-  Future<void> sendResetCode() async {
-    try {
-      Provider.of<AuthService>(context, listen: false)
-          .sendResetCode(_emailController.text);
-      Navigator.of(context).pushNamed(ResetPasswordScreen.routeName);
-    } catch (e) {
-      print(e);
-    }
+  initialise() {
+    farmerService = FarmerService();
+    farmerService.initialise();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initialise();
+  }
+
+  Future<void> update() async {
+    await farmerService
+        .updateCultivation(id, _nameController.text)
+        .then((value) => {});
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, String>{}) as Map;
+    setState(() {
+      id = arguments['id'];
+    });
+
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
@@ -70,7 +87,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "Forgot",
+                          "Add",
                           style: TextStyle(
                               fontSize: 40, fontWeight: FontWeight.bold),
                         ),
@@ -81,7 +98,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "Password?",
+                          "Cultivation",
                           style: TextStyle(
                               fontSize: 40, fontWeight: FontWeight.bold),
                         ),
@@ -94,7 +111,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      "Don’t worry! It happens. Please enter the email address associated with your account.",
+                      "Add new cultivation name here. It will show in the dashboard after submitting.",
                       style: TextStyle(fontSize: 15, color: Colors.grey),
                     ),
                   ),
@@ -105,21 +122,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 30.0),
                   child: TextFormField(
-                    controller: _emailController,
+                    controller: _nameController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.alternate_email),
-                      hintText: 'Enter email address',
-                      labelText: 'Email *',
+                      icon: Icon(Icons.eco),
+                      hintText: 'Enter cultivation name',
+                      labelText: 'Cultivation name *',
                     ),
-                    onSaved: (String? value) {
-                      // This optional block of code can be used to run
-                      // code when the user saves the form.
-                    },
-                    validator: (String? value) {
-                      return (value != null && value.contains('@'))
-                          ? 'Do not use the @ char.'
-                          : null;
-                    },
                   ),
                 ),
                 SizedBox(
@@ -142,9 +150,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             EdgeInsets.all(18.0)),
                       ),
                       onPressed: () {
-                        sendResetCode();
+                        update();
                       },
-                      child: Text('Submit',
+                      child: Text('Add',
                           style: TextStyle(
                             fontSize: 15,
                           )),

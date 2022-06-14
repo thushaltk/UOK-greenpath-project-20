@@ -1,16 +1,22 @@
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:greenpath_20/screens/add-cultivation-screen.dart';
 import 'package:greenpath_20/screens/cultivation-screen.dart';
+import 'package:greenpath_20/services/auth-service.dart';
+import 'package:greenpath_20/services/farmer-service.dart';
+import 'package:greenpath_20/services/investor-service.dart';
 import 'package:greenpath_20/widgets/item-card-widget.dart';
 import 'package:greenpath_20/widgets/navigation-drawer-widget.dart';
 import 'package:greenpath_20/widgets/nearby-business-card-widget.dart';
 import 'package:greenpath_20/widgets/weather-card-widget.dart';
+import 'package:provider/provider.dart';
 
 class DashboardFarmerScreen extends StatefulWidget {
+  final userEmail;
   static const routeName = '/dashboard-farmer';
 
-  const DashboardFarmerScreen({Key? key}) : super(key: key);
+  const DashboardFarmerScreen({Key? key, this.userEmail}) : super(key: key);
 
   @override
   State<DashboardFarmerScreen> createState() => _DashboardFarmerScreenState();
@@ -18,6 +24,41 @@ class DashboardFarmerScreen extends StatefulWidget {
 
 class _DashboardFarmerScreenState extends State<DashboardFarmerScreen> {
   int _selectedIndex = 0;
+  late FarmerService farmerService;
+  late InvestorService investorService;
+  List investorData = [];
+  String username = "";
+  String id = "";
+  String district = "";
+  List cultivations = [];
+
+  initialise() async {
+    farmerService = FarmerService();
+    investorService = InvestorService();
+    farmerService.initialise();
+    investorService.initialise();
+
+    await farmerService.getDataByEmail(widget.userEmail).then((value) => {
+          setState(() {
+            username = value['username'];
+            cultivations = value['cultivations'];
+            id = value['id'];
+            district = value['district'];
+          })
+        });
+
+    await investorService.getDataByLocation(district).then((value) => {
+          setState(() {
+            investorData = value;
+          })
+        });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initialise();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -32,7 +73,7 @@ class _DashboardFarmerScreenState extends State<DashboardFarmerScreen> {
         actions: [
           Center(
             child: Text(
-              'Jayasumana D',
+              username,
               style: TextStyle(color: Colors.black),
             ),
           ),
@@ -107,146 +148,154 @@ class _DashboardFarmerScreenState extends State<DashboardFarmerScreen> {
           ),
           Expanded(
             child: Container(
-              alignment: Alignment.center,
               width: double.infinity,
               height: double.infinity,
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 180,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 25.0, bottom: 10.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .pushNamed(CultivationScreen.routeName);
-                                  },
-                                  child: ItemCardWidget(
-                                      routename: 'paddy-item',
-                                      image: Image.asset(
-                                        'assets/images/paddy.png',
-                                        fit: BoxFit.cover,
-                                      ),
-                                      name: 'Paddy'),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      height: 180,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: cultivations.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(left: 10.0, bottom: 10.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                      CultivationScreen.routeName,
+                                      arguments: {
+                                        'name': cultivations[index]['name']
+                                      });
+                                },
                                 child: ItemCardWidget(
-                                    routename: 'tomatoe-item',
-                                    image: Image.asset(
-                                      'assets/images/tomatoe.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                    name: 'Tomatoe'),
+                                    routename: 'cultivation-screen',
+                                    image:
+                                        cultivations[index]['name'] == 'Paddy'
+                                            ? Image.asset(
+                                                'assets/images/paddy.png',
+                                                fit: BoxFit.cover,
+                                              )
+                                            : cultivations[index]['name'] ==
+                                                    'Cabbage'
+                                                ? Image.asset(
+                                                    'assets/images/cabbage.png',
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : cultivations[index]['name'] ==
+                                                        'Tomatoe'
+                                                    ? Image.asset(
+                                                        'assets/images/tomatoe.png',
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    : Image.asset(
+                                                        'assets/images/carrot.png',
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                    name: cultivations[index]['name']),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: ItemCardWidget(
-                                    routename: 'cabbage-item',
-                                    image: Image.asset(
-                                      'assets/images/cabbage.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                    name: 'Cabbage'),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: SizedBox(
-                                  width: 150,
-                                  height: 150,
-                                  child: Card(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(25.0),
-                                          side:
-                                              BorderSide(color: Colors.green)),
-                                      elevation: 5,
-                                      child: Icon(
-                                        Icons.add,
-                                        color: Colors.green,
-                                      )),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          );
+                        },
+                        scrollDirection: Axis.horizontal,
                       ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 25.0, bottom: 10.0),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                            AddCultivationScreen.routeName,
+                            arguments: {'id': id});
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: Text(
-                            "Weather Forecast",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25.0),
+                                    side: BorderSide(color: Colors.green)),
+                                elevation: 5,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.add,
+                                      color: Colors.green,
+                                    ),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    Text(
+                                      'Add More',
+                                      style: TextStyle(color: Colors.green),
+                                    )
+                                  ],
+                                )),
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Align(
-                            alignment: Alignment.topLeft,
-                            child: WeatherCardWidget()),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 25.0, bottom: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Nearby Businesses",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Weather Forecast",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Align(
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: Align(
                           alignment: Alignment.topLeft,
-                          child: NearbyBusinessCardWidget(),
+                          child: WeatherCardWidget()),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Nearby Businesses",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: NearbyBusinessCardWidget(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: NearbyBusinessCardWidget(),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: investorData.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: NearbyBusinessCardWidget(
+                                  investorData: investorData[index],
+                                  businessname: investorData[index]
+                                      ['businessname'],
+                                  location: investorData[index]['location']),
+                            ),
+                          );
+                        }),
+                  ],
                 ),
               ),
             ),

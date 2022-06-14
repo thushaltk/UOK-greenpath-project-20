@@ -1,6 +1,11 @@
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:greenpath_20/models/http_exception.dart';
+import 'package:greenpath_20/screens/dashboard-investor-screen.dart';
+import 'package:greenpath_20/services/auth-service.dart';
+import 'package:provider/provider.dart';
 
 class LoginInvestorScreen extends StatefulWidget {
   static const routeName = '/login-investor';
@@ -13,8 +18,9 @@ class LoginInvestorScreen extends StatefulWidget {
 
 class _LoginInvestorScreenState extends State<LoginInvestorScreen> {
   late FocusNode myNode;
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -26,6 +32,53 @@ class _LoginInvestorScreenState extends State<LoginInvestorScreen> {
   void dispose() {
     myNode.dispose();
     super.dispose();
+  }
+
+  Future<void> onSubmit() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await Provider.of<AuthService>(context, listen: false)
+          .login(_emailController.text, _passwordController.text);
+      Navigator.of(context).pushNamed(DashboardInvestorScreen.routeName);
+    } on HttpException catch (error) {
+      var errorMessage = "Authentication Failed!";
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email is already in use!';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'This email is invalid!';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'Weak password!';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'Email not found!';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Password is incorrect!';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (error) {
+      var errorMessage = "Could not authenticate you. Please try again later.";
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -48,7 +101,9 @@ class _LoginInvestorScreenState extends State<LoginInvestorScreen> {
               alignment: Alignment.topLeft,
               child: BackButton(
                 color: Colors.black,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ),
           ),
@@ -77,6 +132,7 @@ class _LoginInvestorScreenState extends State<LoginInvestorScreen> {
             padding: const EdgeInsets.only(left: 20.0, right: 30.0),
             child: TextFormField(
               focusNode: myNode,
+              controller: _emailController,
               decoration: InputDecoration(
                 icon: Icon(Icons.alternate_email),
                 hintText: 'Enter email address',
@@ -99,6 +155,7 @@ class _LoginInvestorScreenState extends State<LoginInvestorScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 30.0),
             child: TextFormField(
+              controller: _passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 icon: Icon(Icons.lock),
@@ -142,7 +199,9 @@ class _LoginInvestorScreenState extends State<LoginInvestorScreen> {
                   padding: MaterialStateProperty.all<EdgeInsets>(
                       EdgeInsets.all(18.0)),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  onSubmit();
+                },
                 child: Text('Login',
                     style: TextStyle(
                       fontSize: 15,

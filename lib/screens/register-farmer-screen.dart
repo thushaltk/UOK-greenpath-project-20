@@ -1,7 +1,12 @@
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:greenpath_20/models/http_exception.dart';
+import 'package:greenpath_20/screens/create-farmer-account-screen.dart';
 import 'package:greenpath_20/screens/login-farmer-screen.dart';
+import 'package:greenpath_20/services/auth-service.dart';
+import 'package:provider/provider.dart';
 
 class RegisterFarmerScreen extends StatefulWidget {
   static const routeName = '/register-farmer';
@@ -13,9 +18,6 @@ class RegisterFarmerScreen extends StatefulWidget {
 }
 
 class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
-  String dropdownValue = 'Select gender *';
-  String dropdownDistrictValue = 'Select district *';
-  String dropdownCultivationsValue = 'Select cultivation(add more later) *';
   List<String> districts = [
     'Select district *',
     'Colombo',
@@ -51,7 +53,72 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
     'Cabbage',
     'Corn'
   ];
+  final _fullNameController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  String dropdownValue = 'Select gender *';
+  final _phoneController = TextEditingController();
+  String dropdownDistrictValue = 'Select district *';
+  String dropdownCultivationsValue = 'Select cultivation(add more later) *';
+  Map<String, String> cultivationData = {
+    'name': '',
+    'soilMoisture': '',
+    'soilTemperature': '',
+    'soilPhLevel': ''
+  };
 
+  var _isLoading = false;
+
+  Future<void> onSubmit() async {
+    setState(() {
+      _isLoading = true;
+    });
+    cultivationData = {
+      'name': dropdownCultivationsValue,
+      'soilMoisture': '',
+      'soilTemperature': '',
+      'soilPhLevel': ''
+    };
+
+    try {
+      await Provider.of<AuthService>(context, listen: false).insertRegisterData(
+          _fullNameController.text,
+          _usernameController.text,
+          _emailController.text,
+          dropdownDistrictValue,
+          cultivationData,
+          dropdownValue,
+          _phoneController.text);
+      Navigator.of(context).pushNamed(CreateFarmerAccountScreen.routeName);
+    } on HttpException catch (error) {
+      print(error);
+      var errorMessage = "Registration Failed!";
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (error) {
+      print(error);
+      var errorMessage = "Error occured. Please try again later.";
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,19 +149,20 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                   ),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 25.0, bottom: 10.0),
+                  padding: const EdgeInsets.only(left: 25.0, bottom: 10.0),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
                       "Register",
-                      style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                     ),
                   ),
-                ),   
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 30.0),
                   child: TextFormField(
+                    controller: _fullNameController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.face),
                       hintText: 'Enter full name',
@@ -112,6 +180,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 30.0),
                   child: TextFormField(
+                    controller: _usernameController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.person),
                       hintText: 'Enter prefered username',
@@ -129,6 +198,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 30.0),
                   child: TextFormField(
+                    controller: _emailController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.alternate_email),
                       hintText: 'Enter email address',
@@ -169,9 +239,10 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value, style: TextStyle(
-                                color: Colors.grey
-                              ),),
+                              child: Text(
+                                value,
+                                style: TextStyle(color: Colors.grey),
+                              ),
                             );
                           }).toList(),
                         ),
@@ -185,6 +256,7 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 30.0),
                   child: TextFormField(
+                    controller: _phoneController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.contact_phone),
                       hintText: 'Enter mobile number',
@@ -220,10 +292,14 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                               dropdownDistrictValue = newValue!;
                             });
                           },
-                          items: districts.map<DropdownMenuItem<String>>((String value) {
+                          items: districts
+                              .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value, style: TextStyle(color: Colors.grey),),
+                              child: Text(
+                                value,
+                                style: TextStyle(color: Colors.grey),
+                              ),
                             );
                           }).toList(),
                         ),
@@ -255,10 +331,12 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                               dropdownCultivationsValue = newValue!;
                             });
                           },
-                          items: cultivations.map<DropdownMenuItem<String>>((String value) {
+                          items: cultivations
+                              .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value, style: TextStyle(color:Colors.grey)),
+                              child: Text(value,
+                                  style: TextStyle(color: Colors.grey)),
                             );
                           }).toList(),
                         ),
@@ -270,28 +348,31 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                   height: 20,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 25.0, bottom: 10.0, right: 30.0),
+                  padding: const EdgeInsets.only(
+                      left: 25.0, bottom: 10.0, right: 30.0),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: RichText(
                       text: TextSpan(
-                        text: "By signing up, you’re agree to our ",
-                        style: TextStyle(fontSize: 15, color: Colors.grey),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Terms and Conditions ',
-                            style: TextStyle(fontSize: 15, color: Colors.green),
-                          ),
-                          TextSpan(
-                            text: 'and ',
-                            style: TextStyle(fontSize: 15, color: Colors.grey),
-                          ),
-                          TextSpan(
-                            text: 'Privacy Policy',
-                            style: TextStyle(fontSize: 15, color: Colors.green),
-                          )
-                        ]
-                      ),
+                          text: "By signing up, you’re agree to our ",
+                          style: TextStyle(fontSize: 15, color: Colors.grey),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Terms and Conditions ',
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.green),
+                            ),
+                            TextSpan(
+                              text: 'and ',
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.grey),
+                            ),
+                            TextSpan(
+                              text: 'Privacy Policy',
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.green),
+                            )
+                          ]),
                     ),
                   ),
                 ),
@@ -304,8 +385,9 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         )),
                         backgroundColor:
@@ -313,7 +395,9 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                         padding: MaterialStateProperty.all<EdgeInsets>(
                             EdgeInsets.all(18.0)),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        onSubmit();
+                      },
                       child: Text('Register',
                           style: TextStyle(
                             fontSize: 15,
@@ -333,8 +417,9 @@ class _RegisterFarmerScreenState extends State<RegisterFarmerScreen> {
                       style: TextStyle(color: Colors.grey),
                     ),
                     GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).pushNamed(LoginFarmerScreen.routeName);
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(LoginFarmerScreen.routeName);
                       },
                       child: Text(
                         'Login',
